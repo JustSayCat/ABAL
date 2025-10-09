@@ -1,0 +1,259 @@
+bra main
+
+@ flip_display
+	lddi A VMem display_location
+	lddi B VMem vdisplay_pointer
+	stdi A VMem vdisplay_pointer
+	stdi B VMem display_location
+	ret
+
+@ mul
+	stdi A Cache 0
+	stdi B Cache 1
+	ldim A 0
+	stdi A Cache 2
+@ mul_loop
+	lddi B Cache 0
+	lddi A Cache 2
+	add A
+	stdi A Cache 2
+	lddi A Cache 1
+	ldim B 1
+	sub A
+	stdi A Cache 1
+	brz mul_end
+	bra mul_loop
+@ mul_end
+	ldim B 0
+	lddi A Cache 2
+	ret
+	
+
+@ clear_screen
+	lddi Index VMem display_location
+@ clear_screen_loop
+	ldim A 0
+	stfr A VMem Index
+	inc
+	lddi A VMem display_location
+	ldim B 512
+	add B
+	cpy A Index
+	sub A
+	brc clear_screen_end
+	bra clear_screen_loop
+@ clear_screen_end
+	ret
+	
+
+@ display_ball
+	lddi A VMem bally
+	ldim B 8
+	cal mul
+	cpy R1 A
+	lddi A VMem ballx
+	rorc A
+	clc
+	rorc A
+	clc
+	rorc A
+	clc
+	cpy B R1
+	add A
+	lddi B VMem display_location
+	add Index
+	lddi A VMem ballx
+	ldim B 0b111
+	and A
+	stdi A Cache 0
+	lddi A VMem pixel
+	stdi A Cache 1
+	brz display_ball_end
+	
+@ display_ball_loop
+	lddi A Cache 1
+	ror A
+	ror A
+	ror A
+	ror A
+	stdi A Cache 1
+	lddi A Cache 0
+	ldim B 1
+	sub A
+	stdi A Cache 0
+	brz display_ball_end
+	bra display_ball_loop
+	
+@ display_ball_end
+	lddi B Cache 1
+	ldfr A VMem Index
+	or A
+	stfr A VMem Index
+	ret
+	
+@ display_player
+	lddi A VMem pixel
+	ror A
+	ror A
+	ror A
+	ror A
+	ror A
+	ror A
+	ror A
+	ror A
+	cpy R2 A
+	lddi A VMem player_y
+	ldim B 8
+	cal mul
+	lddi B VMem display_location
+	add A
+	cpy R3 A
+	ldim B 8
+	stfr R2 VMem A
+	add A
+	stfr R2 VMem A
+	add A
+	stfr R2 VMem A
+	cpy A R3
+	sub A
+	stfr R2 VMem A
+	sub A
+	stfr R2 VMem A
+	ret
+	
+	
+@ main
+	lddi A VMem ballx
+	ldim B 0
+	add A
+	brz display_game_over
+	
+@ main_player
+	lddi R1 VInput 0
+	cpy A R1
+	ldim B 1
+	and A
+	brz main_up_move
+	lddi A VMem player_y
+	ldim B 1
+	sub A
+	stdi A VMem player_y
+	ldim B 2
+	sub A
+	brp main_up_move
+	ldim A 2
+	stdi A VMem player_y
+	
+@ main_up_move
+	cpy A R1
+	ldim B 2
+	and A
+	brz main_ball
+	lddi A VMem player_y
+	ldim B 1
+	add A
+	stdi A VMem player_y
+	ldim B 61
+	sub A
+	brp main_correct_up_move
+	bra main_ball
+
+@ main_correct_up_move
+	ldim A 61
+	stdi A VMem player_y
+	
+@ main_ball
+	lddi A VMem ballx
+	lddi B VMem ball_velx
+	add A
+	stdi A VMem ballx
+	brz main_invert_ballx
+	ldim B 63
+	sub A
+	brz main_invert_ballx
+	bra main_calc_bally
+	
+@ main_invert_ballx
+	lddi A VMem ball_velx
+	not A
+	ldim B 1
+	add A
+	stdi A VMem ball_velx
+
+@ main_calc_bally
+	lddi A VMem bally
+	lddi B VMem ball_vely
+	add A
+	stdi A VMem bally
+	brz main_invert_bally
+	ldim B 63
+	sub A
+	brz main_invert_bally
+	bra main_check_intersection
+	
+@ main_invert_bally
+	lddi A VMem ball_vely
+	not A
+	ldim B 1
+	add A
+	stdi A VMem ball_vely
+	
+@ main_check_intersection
+	lddi A VMem ballx
+	ldim B 3
+	sub A
+	brz main_check_collision
+	bra main_draw
+
+@ main_check_collision
+	lddi A VMem player_y
+	ldim B 3
+	add B
+	lddi A VMem bally
+	sub A
+	brp main_draw
+	lddi A VMem player_y
+	ldim B 3
+	sub A
+	lddi B VMem bally
+	sub A
+	brp main_draw
+	lddi A VMem ball_velx
+	not A
+	ldim B 1
+	add A
+	stdi A VMem ball_velx
+	
+@ main_draw
+	cal clear_screen
+	cal display_player
+	cal display_ball
+	cal flip_display
+	bra main
+	
+@ display_game_over
+	lddi R1 VMem display_location
+	lddi R2 VMem game_over_screen_pointer
+@ display_game_over_loop
+	cpy Index R2
+	ldfr A VMem Index
+	inc
+	cpy R2 Index
+	cpy Index R1
+	stfr A VMem Index
+	inc
+	cpy R1 Index
+	lddi A VMem display_location
+	ldim B 512
+	add B
+	cpy A R1
+	sub A
+	brc display_game_over_end
+	bra display_game_over_loop
+@ display_game_over_end
+	cal flip_display
+	bra halt
+	
+@ halt
+	bra halt
+	

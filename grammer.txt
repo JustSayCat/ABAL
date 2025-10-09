@@ -1,0 +1,34 @@
+TYPES:
+    int -> whole number
+    bool -> true/false
+    char -> "single character"
+
+CONTROL:
+    if/elif/else -> conditional statements
+    while -> condition loop
+
+FUNCTIONS:
+    func name(args) <type> -> defines a function with name and args and an optional return type
+    name(args) -> calls a function, which can have a return value if made
+
+BOOLEAN:
+    < -> less than
+    <= -> less than or equal to
+    > -> more than
+    >= -> more than or equal to
+    == -> equal to
+    != -> not equal to
+    ! -> not
+    && -> and
+    || -> or
+
+MATHS:
+    = -> set to
+    + -> add
+    - -> minus
+    * -> multiply
+    / -> divide
+
+ARRAYS:
+    <type>[] var = [<size>] -> defines an array with set size
+    var[<index>] -> gets array element at index

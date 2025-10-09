@@ -1,0 +1,24 @@
+func fizzbuzz(int iterations) {
+    char[] fizz = [4];
+    fizz[0] = "F"; fizz[1] = "i"; fizz[2] = "z"; fizz[3] = "z";
+    char[] buzz = [4];
+    buzz[0] = "B"; buzz[1] = "u"; buzz[2] = "z"; buzz[3] = "z";
+    char[] fizzbuzz = [8];
+    fizzbuzz[0] = "F"; fizzbuzz[1] = "i"; fizzbuzz[2] = "z"; fizzbuzz[3] = "z"; fizzbuzz[4] = "B"; fizzbuzz[5] = "u"; fizzbuzz[6] = "z"; fizzbuzz[7] = "z";
+
+    int i = 1;
+    while(i < (iterations+1)) {
+        if(mod(i, 3) == 0 && mod(i, 5) == 0) {
+            print(fizzbuzz);
+        } elif(mod(i, 3) == 0) {
+            print(fizz);
+        } elif(mod(i, 5) == 0) {
+            print(buzz);
+        } else {
+            print(int_to_str(i));
+        }
+        i = i+1;
+    }
+}
+
+fizzbuzz(15);

@@ -1,0 +1,17 @@
+func fizzbuzz(int iterations) {
+    int i = 1;
+    while(i < (iterations+1)) {
+        if(mod(i, 3) == 0 && mod(i, 5) == 0) {
+            print("FizzBuzz");
+        } elif(mod(i, 3) == 0) {
+            print("Fizz");
+        } elif(mod(i, 5) == 0) {
+            print("Buzz");
+        } else {
+            print(int_to_str(i));
+        }
+        i = i+1;
+    }
+}
+
+fizzbuzz(15);
