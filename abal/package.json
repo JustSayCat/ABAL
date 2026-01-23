@@ -1,0 +1,25 @@
+{
+  "name": "abal",
+  "displayName": "abal",
+  "description": "A syntax highlighting for my custom language ABAL",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "abal",
+      "aliases": ["abal", "abal"],
+      "extensions": [".abal"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "abal",
+      "scopeName": "source.abal",
+      "path": "./syntaxes/abal.tmLanguage.json"
+    }]
+  }
+}
