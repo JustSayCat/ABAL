@@ -108,6 +108,12 @@ def parse(tokens):
                     popped_indent = indent_stack.pop()
                     if len(indent_stack) > 0 and indent_stack[-1][0] == "WHILE":
                         indent_stack[-1][1][1].append(popped_indent)
+                    elif len(indent_stack) > 0 and indent_stack[-1][0] == "IF":
+                        indent_stack[-1][1][1].append(popped_indent)
+                    elif len(indent_stack) > 0 and indent_stack[-1][0] == "ELSE":
+                        indent_stack[-1][1].append(popped_indent)
+                    elif len(indent_stack) > 0 and indent_stack[-1][0] == "ELIF":
+                        indent_stack[-1][1][1].append(popped_indent)
                     elif len(indent_stack) > 0 and indent_stack[0][0] == "FUNC":
                         indent_stack[0][1][3].append(popped_indent)
                     else:

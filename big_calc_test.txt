@@ -1,0 +1,26 @@
+lets say we wanted to do
+(a+b)-(c+(d/4))
+assuming that each operation flushes all registers, how can we get the result
+parts:
+    1. a+b
+    2. c
+    3. d/4
+    4. (2)+(3)
+    4. (1)-(4)
+
+so when we load a+b we can load a into A and b into B quickly
+then we want to resolve c+d/4 while (1) is in A so we push (1) into the stack
+we now can get c into A but we need to get d/4 so we need to get d/4 first into B then C into A then add
+now move A to B and pop into A then subtract
+
+currently order is recursive so a depth first resolver will help do a side at a time
+
+General Algorithm to do this:
+    populate registers with what we need
+    do the calculation
+    push result into stack
+    
+A: 
+B:
+Stack: a+b c d/4
+Vars: 

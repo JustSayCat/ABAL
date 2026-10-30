@@ -1,34 +1,42 @@
 TYPES:
     int -> whole number
     bool -> true/false
-    char -> "single character"
+    char -> "single character" (NOT COMPILED)
 
 CONTROL:
     if/elif/else -> conditional statements
     while -> condition loop
 
-FUNCTIONS:
+FUNCTIONS: (NOT COMPILED)
     func name(args) <type> -> defines a function with name and args and an optional return type
     name(args) -> calls a function, which can have a return value if made
 
 BOOLEAN:
+    ! -> not
+    && -> and
+    || -> or
+
+COMPARISON:
     < -> less than
     <= -> less than or equal to
     > -> more than
     >= -> more than or equal to
     == -> equal to
     != -> not equal to
-    ! -> not
-    && -> and
-    || -> or
 
-MATHS:
+OPERATORS:
     = -> set to
-    + -> add
+    + -> add/concat
     - -> minus
-    * -> multiply
-    / -> divide
+    * -> multiply (NOT COMPILED)
+    / -> divide (NOT COMPILED)
+    % -> modulo (NOT ADDED)
+    >> -> right shift (NOT ADDED)
+    << -> left shift (NOT ADDED)
+    & -> bitwise and (NOT ADDED)
+    | -> bitwise or (NOT ADDED)
+    ^ -> bitwise xor (NOT ADDED)
 
-ARRAYS:
+ARRAYS: (NOT COMPILED)
     <type>[] var = [<size>] -> defines an array with set size
-    var[<index>] -> gets array element at index
+    var[<index>] -> gets array element at index 
