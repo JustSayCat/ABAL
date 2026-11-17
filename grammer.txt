@@ -36,6 +36,7 @@ OPERATORS:
     & -> bitwise and (NOT ADDED)
     | -> bitwise or (NOT ADDED)
     ^ -> bitwise xor (NOT ADDED)
+    ¬ -> bitwise not (NOT ADDED)
 
 ARRAYS: (NOT COMPILED)
     <type>[] var = [<size>] -> defines an array with set size

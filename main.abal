@@ -1,5 +1,13 @@
-func foo(int a, int b) int {
+func rec(int n) int {
+    if(n <= 0) {
+        return 0;
+    }
+    if(n == 1) {
+        return 1;
+    }
+    int a = rec(n-1);
+    int b = rec(n-2);
     return a+b;
 }
 
-int c = foo(10, 22);
+int a = rec(4);

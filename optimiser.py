@@ -9,6 +9,12 @@ def optimiseInstructions(instructions):
 def optimisePass(instructions):
     optimised = []
     i = 0
+    cleaned = []
+    for inst in instructions:
+        if inst.startswith("!!!"):
+            continue
+        cleaned.append(inst)
+    instructions = cleaned
     while i < len(instructions):
         if i == len(instructions)-1:
             optimised.append(instructions[i])
@@ -22,9 +28,22 @@ def optimisePass(instructions):
             if fromReg != toReg:
                 optimised.append(f"cpy {toReg} {fromReg};")
             i += 2
+        elif current_inst[0] == "pop" and next_inst[0] == "push":
+            fromReg = current_inst[1]
+            toReg = next_inst[1]
+            if fromReg != toReg:
+                optimised.append(instructions[i])
+                optimised.append(instructions[i+1])
+            i += 2
         elif current_inst[0] == "ldfr" and next_inst[0] == "cpy":
             if current_inst[1] == next_inst[2]:
                 optimised.append(f"{current_inst[0]} {next_inst[1]} {current_inst[2]} {current_inst[3]};")
+            else:
+                optimised.extend([instructions[i], instructions[i+1]])
+            i += 2
+        elif current_inst[0] == "stfr" and next_inst[0] == "ldfr":
+            if current_inst[1] == next_inst[1] or current_inst[2] == next_inst[2]:
+                optimised.append(instructions[i])
             else:
                 optimised.extend([instructions[i], instructions[i+1]])
             i += 2

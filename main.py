@@ -7,6 +7,7 @@ from labeler import resolveLabels
 
 DEBUG = True
 COMPILE = True
+OUTPUT_COMMENTS = False
 contents = ""
 with open("main.abal", "r") as file:
     contents = file.read()
@@ -24,8 +25,13 @@ if DEBUG:
     print()
 if COMPILE:
     instructions = compileAST(nodes)
+    print(instructions)
     optimised = optimiseInstructions(instructions)
-    labelled = resolveLabels(optimised)
+    labelled = []
+    if OUTPUT_COMMENTS:
+        labelled = resolveLabels(instructions)
+    else:
+        labelled = resolveLabels(optimised)
     for i in range(len(labelled)):
         if i < len(labelled)-1:
             labelled[i] += "\n"
