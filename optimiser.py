@@ -41,6 +41,12 @@ def optimisePass(instructions):
             else:
                 optimised.extend([instructions[i], instructions[i+1]])
             i += 2
+        elif current_inst[0] == "ldim" and next_inst[0] == "cpy":
+            if current_inst[1] == next_inst[2]:
+                optimised.append(f"{current_inst[0]} {next_inst[1]} {current_inst[2]};")
+            else:
+                optimised.extend([instructions[i], instructions[i+1]])
+            i += 2
         elif current_inst[0] == "stfr" and next_inst[0] == "ldfr":
             if current_inst[1] == next_inst[1] or current_inst[2] == next_inst[2]:
                 optimised.append(instructions[i])

@@ -9,6 +9,9 @@ def getNextFreeId():
     NEXT_ID += 1
     return current
 
+# TODO: consider optimising conditional statements to evalute comaprisons directly instead of evalutating a boolean
+# and then evalute if that boolean is true, would reduce program size and speed up execution
+
 # Upon this being called internally, we must ensure that at the end we resolve the current_stack_pointer to its initial value
 def compileAST(nodes, stack_tracker=None, current_stack_pointer=None, top_of_stack=None, function_tracker=None, func_name=None):
     instructions = []
@@ -145,6 +148,29 @@ def resolveIntValue(node, current_stack_pointer, top_of_stack, stack_tracker, fu
         left_side_load_instructions, current_stack_pointer = resolveIntValue(node[1][0], current_stack_pointer, top_of_stack, stack_tracker, function_tracker)
         right_side_load_instructions, current_stack_pointer = resolveIntValue(node[1][1], current_stack_pointer, top_of_stack, stack_tracker, function_tracker)
         return left_side_load_instructions+right_side_load_instructions+["pop B;", "pop A;", "sub A;", "push A;"], current_stack_pointer
+    elif node[0] == "BITWISE_OR":
+        left_side_load_instructions, current_stack_pointer = resolveIntValue(node[1][0], current_stack_pointer, top_of_stack, stack_tracker, function_tracker)
+        right_side_load_instructions, current_stack_pointer = resolveIntValue(node[1][1], current_stack_pointer, top_of_stack, stack_tracker, function_tracker)
+        return left_side_load_instructions+right_side_load_instructions+["pop B;", "pop A;", "or A;", "push A;"], current_stack_pointer
+    elif node[0] == "BITWISE_AND":
+        left_side_load_instructions, current_stack_pointer = resolveIntValue(node[1][0], current_stack_pointer, top_of_stack, stack_tracker, function_tracker)
+        right_side_load_instructions, current_stack_pointer = resolveIntValue(node[1][1], current_stack_pointer, top_of_stack, stack_tracker, function_tracker)
+        return left_side_load_instructions+right_side_load_instructions+["pop B;", "pop A;", "and A;", "push A;"], current_stack_pointer
+    elif node[0] == "BITWISE_XOR":
+        left_side_load_instructions, current_stack_pointer = resolveIntValue(node[1][0], current_stack_pointer, top_of_stack, stack_tracker, function_tracker)
+        right_side_load_instructions, current_stack_pointer = resolveIntValue(node[1][1], current_stack_pointer, top_of_stack, stack_tracker, function_tracker)
+        return left_side_load_instructions+right_side_load_instructions+["pop B;", "pop A;", "xor A;", "push A;"], current_stack_pointer
+    elif node[0] == "LEFT_SHIFT":
+        left_side_load_instructions, current_stack_pointer = resolveIntValue(node[1][0], current_stack_pointer, top_of_stack, stack_tracker, function_tracker)
+        right_side_load_instructions, current_stack_pointer = resolveIntValue(node[1][1], current_stack_pointer, top_of_stack, stack_tracker, function_tracker)
+        return left_side_load_instructions+right_side_load_instructions+["pop B;", "pop A;", "rolr A;", "push A;"], current_stack_pointer
+    elif node[0] == "RIGHT_SHIFT":
+        left_side_load_instructions, current_stack_pointer = resolveIntValue(node[1][0], current_stack_pointer, top_of_stack, stack_tracker, function_tracker)
+        right_side_load_instructions, current_stack_pointer = resolveIntValue(node[1][1], current_stack_pointer, top_of_stack, stack_tracker, function_tracker)
+        return left_side_load_instructions+right_side_load_instructions+["pop B;", "pop A;", "rorr A;", "push A;"], current_stack_pointer
+    elif node[0] == "BITWISE_NOT":
+        left_side_load_instructions, current_stack_pointer = resolveIntValue(node[1], current_stack_pointer, top_of_stack, stack_tracker, function_tracker)
+        return left_side_load_instructions+["pop A;", "not A;", "push A;"], current_stack_pointer
     elif node[0] == "INT":
         return [f"ldim A {node[1]};", "push A;"], current_stack_pointer # TODO: this only works up to 22bit numbers unsigned, so this needs to check if the number is out of that range and thus store it elsewhere to be loaded
     elif node[0] == "UNKNOWN":

@@ -1,5 +1,5 @@
 TYPES:
-    int -> whole number
+    int -> whole number (32 bits)
     bool -> true/false
     char -> "single character" (NOT COMPILED)
 
@@ -7,7 +7,7 @@ CONTROL:
     if/elif/else -> conditional statements
     while -> condition loop
 
-FUNCTIONS: (NOT COMPILED)
+FUNCTIONS:
     func name(args) <type> -> defines a function with name and args and an optional return type
     name(args) -> calls a function, which can have a return value if made
 
@@ -31,12 +31,12 @@ OPERATORS:
     * -> multiply (NOT COMPILED)
     / -> divide (NOT COMPILED)
     % -> modulo (NOT ADDED)
-    >> -> right shift (NOT ADDED)
-    << -> left shift (NOT ADDED)
-    & -> bitwise and (NOT ADDED)
-    | -> bitwise or (NOT ADDED)
-    ^ -> bitwise xor (NOT ADDED)
-    ¬ -> bitwise not (NOT ADDED)
+    >> -> right shift (NOT INTERPRETED)
+    << -> left shift (NOT INTERPRETED)
+    & -> bitwise and (NOT INTERPRETED)
+    | -> bitwise or (NOT INTERPRETED)
+    ^ -> bitwise xor (NOT INTERPRETED)
+    ~ -> bitwise not (NOT INTERPRETED)
 
 ARRAYS: (NOT COMPILED)
     <type>[] var = [<size>] -> defines an array with set size

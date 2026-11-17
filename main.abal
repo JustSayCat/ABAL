@@ -1,13 +1,1 @@
-func rec(int n) int {
-    if(n <= 0) {
-        return 0;
-    }
-    if(n == 1) {
-        return 1;
-    }
-    int a = rec(n-1);
-    int b = rec(n-2);
-    return a+b;
-}
-
-int a = rec(4);
+int a = ~4&4;

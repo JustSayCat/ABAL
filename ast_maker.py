@@ -18,16 +18,16 @@ def parse(tokens):
             print()
                 
         if len(stack) >= 4:
-            if stack[-2][1] in ("PLUS", "MINUS", "MULTIPLY", "DIVIDE") and current_token[1] == "CLOSE_PAREN" and stack[-4][1] == "OPEN_PAREN":
+            if stack[-2][1] in ("PLUS", "MINUS", "MULTIPLY", "DIVIDE", "LEFT_SHIFT", "RIGHT_SHIFT", "BITWISE_AND", "BITWISE_OR", "BITWISE_XOR") and current_token[1] == "CLOSE_PAREN" and stack[-4][1] == "OPEN_PAREN":
                 stack = stack[:-4] + [(stack[-2][1], (stack[-3], stack[-1]), stack[-1][2])]
                 i += 1
                 continue
 
         if len(stack) >= 3:
-            if stack[-2][1] in ("MULTIPLY", "DIVIDE") and stack[-1][1] != "OPEN_PAREN":
+            if stack[-2][1] in ("MULTIPLY", "DIVIDE", "LEFT_SHIFT", "RIGHT_SHIFT") and stack[-1][1] != "OPEN_PAREN":
                 stack = stack[:-3] + [(stack[-2][1], (stack[-3], stack[-1]), stack[-1][2])]
                 continue
-            elif stack[-2][1] in ("PLUS", "MINUS") and current_token[1] in ("END_COMMAND", "PLUS", "MINUS"):
+            elif stack[-2][1] in ("PLUS", "MINUS", "BITWISE_AND", "BITWISE_OR", "BITWISE_XOR") and current_token[1] in ("END_COMMAND", "PLUS", "MINUS", "BITWISE_AND", "BITWISE_OR", "BITWISE_XOR"):
                 stack = stack[:-3] + [(stack[-2][1], (stack[-3], stack[-1]), stack[-1][2])]
                 continue
             elif stack[-3][1] == "func" and stack[-2][0] == "UNKNOWN" and stack[-1][1] == "OPEN_PAREN":
@@ -51,6 +51,9 @@ def parse(tokens):
                 continue
             elif stack[0][0] == "UNKNOWN" and stack[1][1] == "SET_TO":
                 stack = [("ASSIGNMENT", stack[0][1], stack[1][2])]
+                continue
+            elif stack[-2][1] == "BITWISE_NOT" and stack[-1][0] == "INT":
+                stack = stack[:-2] + [("BITWISE_NOT", stack[-1])]
                 continue
             elif stack[0][0] == "ARRAY_INDEX" and stack[1][1] == "SET_TO":
                 stack = [("INDEX_ASSIGNMENT", stack[0][1], stack[1][2])]

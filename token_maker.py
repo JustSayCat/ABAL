@@ -10,7 +10,9 @@ SYNTAX_TOKENS = {
     "]": "CLOSE_SQUARE",
     "{": "OPEN_BRACE",
     "}": "CLOSE_BRACE",
-    ",": "SEPARATOR"
+    ",": "SEPARATOR",
+    "^": "BITWISE_XOR",
+    "~": "BITWISE_NOT"
 }
 KEYWORDS = {
     "if": "CONTROL",
@@ -24,8 +26,6 @@ KEYWORDS = {
     "return": "STATEMENT",
     "true": "BOOL",
     "false": "BOOL",
-    "&&": "SYNTAX",
-    "||": "SYNTAX"
 }
 
 def tokeniser(contents):
@@ -72,14 +72,22 @@ def tokeniser(contents):
             tokens.append((token_type, int(current_token), (line, column)))
             current_token = ""
             token_type = ""
-        elif l == "<" and token_type == "":
+        elif l == "<" and token_type == "" and (i+1 >= len(contents) or (i+1 <= len(contents) and contents[i+1] != "<")):
             tokens, token_type, current_token = cleanUpCurrentToken(tokens, token_type, current_token, line, column)
             token_type = "LESS_THAN"
             i += 1
-        elif l == ">" and token_type == "":
+        elif l == "<" and token_type == "" and i+1 <= len(contents) and contents[i+1] == "<":
+            tokens, token_type, current_token = cleanUpCurrentToken(tokens, token_type, current_token, line, column)
+            tokens.append(("SYNTAX", "LEFT_SHIFT", (line, column)))
+            i += 2
+        elif l == ">" and token_type == "" and (i+1 >= len(contents) or (i+1 <= len(contents) and contents[i+1] != ">")):
             tokens, token_type, current_token = cleanUpCurrentToken(tokens, token_type, current_token, line, column)
             token_type = "MORE_THAN"
             i += 1
+        elif l == ">" and token_type == "" and i+1 <= len(contents) and contents[i+1] == ">":
+            tokens, token_type, current_token = cleanUpCurrentToken(tokens, token_type, current_token, line, column)
+            tokens.append(("SYNTAX", "RIGHT_SHIFT", (line, column)))
+            i += 2
         elif l == "!" and token_type == "":
             tokens, token_type, current_token = cleanUpCurrentToken(tokens, token_type, current_token, line, column)
             token_type = "NOT"
@@ -100,10 +108,28 @@ def tokeniser(contents):
             tokens.append(("SYNTAX", "NOT_EQUAL_TO", (line, column)))
             token_type = ""
             i += 1
-        elif l == "=" and token_type == "SET_TO":
+        elif l == "=" and token_type == "MORE_THAN":
             tokens.append(("SYNTAX", "MORE_THAN_OR_EQUAL_TO", (line, column)))
             token_type = ""
             i += 1
+        elif l == "&" and ((i+1 < len(contents) and contents[i+1] != "&") or i+1 >= len(contents)):
+            tokens, token_type, current_token = cleanUpCurrentToken(tokens, token_type, current_token, line, column)
+            tokens.append(("SYNTAX", "BITWISE_AND", (line, column)))
+            i += 1
+        elif l == "&" and i< len(contents) and contents[i] == "&":
+            tokens, token_type, current_token = cleanUpCurrentToken(tokens, token_type, current_token, line, column)
+            tokens.append(("SYNTAX", "&&", (line, column)))
+            i += 2
+            column += 1
+        elif l == "|" and ((i+1 < len(contents) and contents[i+1] != "|") or i+1 >= len(contents)):
+            tokens, token_type, current_token = cleanUpCurrentToken(tokens, token_type, current_token, line, column)
+            tokens.append(("SYNTAX", "BITWISE_OR", (line, column)))
+            i += 1
+        elif l == "|" and i+1 < len(contents) and contents[i+1] == "|":
+            tokens, token_type, current_token = cleanUpCurrentToken(tokens, token_type, current_token, line, column)
+            tokens.append(("SYNTAX", "||", (line, column)))
+            i += 2
+            column += 1
         elif current_token in KEYWORDS.keys() and not l.isalnum() and l not in "_-":
             tokens.append((KEYWORDS[current_token], current_token,  (line, column)))
             current_token = ""
