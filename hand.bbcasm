@@ -1,0 +1,34 @@
+bra #1;
+@0
+pop R1;
+pop R2;
+ldim R3 0;
+@4
+ldim A 0;
+cpy B R1;
+sub A;
+brp #2;
+cpy A R1;
+ldim B 1;
+and A;
+brz #3;
+cpy A R3;
+cpy B R2;
+add R3;
+@3
+cpy A R1;
+ldim B 1;
+rorr R1;
+cpy A R2;
+rolr R2;
+bra #4;
+@2
+push R3;
+ret;
+@1
+ldim A 10;
+push A;
+ldim A 20;
+push A;
+cal #0;
+pop A;

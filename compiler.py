@@ -25,7 +25,7 @@ def compileAST(nodes, stack_tracker=None, current_stack_pointer=None, top_of_sta
         top_of_stack = 0
     if function_tracker == None:
         function_tracker = {}
-    started_at = current_stack_pointer
+    started_at = deepcopy(current_stack_pointer)
     i = 0
     functionless_nodes = []
     for node in nodes:
@@ -101,12 +101,13 @@ def compileAST(nodes, stack_tracker=None, current_stack_pointer=None, top_of_sta
                 all_if_instructions.extend([f"@{last_skip_id}", f"@{end_id}"])
             instructions.extend(all_if_instructions)
         elif node[0] == "WHILE":
+            start_pointer = deepcopy(current_stack_pointer)
             resolve_bool_instructions, current_stack_pointer = resolveBoolValue(node[1][0][0], current_stack_pointer, top_of_stack, stack_tracker, function_tracker)
             loop_id = getNextFreeId()
             skip_id = getNextFreeId()
             branch_decision_instructions = ["pop A;", "ldim B 1;", "and A;", f"brz #{skip_id};"]
             internal_while_instructions = compileAST(node[1][1], deepcopy(stack_tracker), deepcopy(current_stack_pointer), deepcopy(top_of_stack), function_tracker, func_name)
-            instructions.extend([f"@{loop_id}"]+resolve_bool_instructions+internal_while_instructions+[f"bra #{loop_id};", f"@{skip_id}"])
+            instructions.extend([f"@{loop_id}"]+resolve_bool_instructions+branch_decision_instructions+internal_while_instructions+navigateStackPointer(current_stack_pointer, start_pointer)+[f"bra #{loop_id};", f"@{skip_id}"])
             i += 1
         elif node[0] == "ELSE":
             raise LangError("Encounted Else statement without an if statement before it!")

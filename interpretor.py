@@ -49,7 +49,7 @@ def interpretAST(nodes, in_vars=None, in_funcs=None, in_current_function_name=""
             if node[1][1] not in variables.keys():
                 variables.update({node[1][1]: {"TYPE": node[1][0], "VALUE": value}})
             else:
-                raise LangError(f"Two variables cannot have the same name! {node[1][1]}", node[0][2])
+                raise LangError(f"Two variables cannot have the same name! {node[1][1]}")
         elif node[0] == "DEFINE":
             value = None
             if node[1][0] == "int":
@@ -248,6 +248,18 @@ def processMaths(node: tuple, variables: dict, functions: dict) -> int:
         return processMaths(node[1][0], variables, functions) * processMaths(node[1][1], variables, functions)
     elif node[0] == "DIVIDE":
         return processMaths(node[1][0], variables, functions) / processMaths(node[1][1], variables, functions)
+    elif node[0] == "BITWISE_AND":
+        return processMaths(node[1][0], variables, functions) & processMaths(node[1][1], variables, functions)
+    elif node[0] == "BITWISE_OR":
+        return processMaths(node[1][0], variables, functions) | processMaths(node[1][1], variables, functions)
+    elif node[0] == "BITWISE_XOR":
+        return processMaths(node[1][0], variables, functions) ^ processMaths(node[1][1], variables, functions)
+    elif node[0] == "BITWISE_NOT":
+        return ~processMaths(node[1][0], variables, functions)
+    elif node[0] == "RIGHT_SHIFT":
+        return processMaths(node[1][0], variables, functions) >> processMaths(node[1][1], variables, functions)
+    elif node[0] == "LEFT_SHIFT":
+        return processMaths(node[1][0], variables, functions) << processMaths(node[1][1], variables, functions)
     elif node[0] == "INT":
         return node[1]
     elif node[0] == "UNKNOWN":

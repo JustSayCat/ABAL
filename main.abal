@@ -1,1 +1,15 @@
-int a = ~4&4;
+func mul(int a, int b) int {
+    int total = 0;
+    int c = 0;
+    while(a > 0) {
+        c = a&1;
+        if(c > 0) {
+            total = total + b;
+        }
+        a = a>>1;
+        b = b<<1;
+    }
+    return total;
+}
+
+int d = mul(10, 20);

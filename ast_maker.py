@@ -158,7 +158,7 @@ def parse(tokens):
             elif stack[0][0] == "ASSIGNMENT":
                 if len(stack) != 2:
                     raise LangError(f"Assignment Has Failed \nStack:\n{stack}", stack[0][2])
-                added_node = (stack[0][0], (stack[0][1][0], stack[1]))
+                added_node = (stack[0][0], (stack[0][1], stack[1]))
                 if len(indent_stack) > 0:
                     if indent_stack[-1][0] in ("IF", "WHILE", "ELIF"):
                         indent_stack[-1][1][1].append(added_node)
